@@ -174,7 +174,7 @@ class MonthlySplit(BaseCrossValidator):
         n_splits : int
             The number of splits.
         """
-        return (int((x.max() - x.min()) / np.timedelta64(1, 'M')) // 2) * 2
+        return (int((X.max() - X.min()) / np.timedelta64(1, 'M')) // 2) * 2
 
     def split(self, X, y, groups=None):
         """Generate indices to split data into training and test set.
