@@ -42,7 +42,7 @@ Hints
 
 from sklearn.metrics.pairwise import pairwise_distances
 
-to compute distances between 2 sets of samples.
+to compute distances between 2 sets of samples.test
 """
 import numpy as np
 import pandas as pd
