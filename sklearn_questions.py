@@ -79,6 +79,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         """
         _clf = KNeighborsClassifier(n_neighbors = self.n_neighbors)
         _clf.fit(X, y)
+        return _clf
 
     def predict(self, X):
         """Predict function.
