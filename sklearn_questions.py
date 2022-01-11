@@ -84,9 +84,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         # Ensure that target y is of a non-regression type.
         check_classification_targets(y)
         # Number of features
-        self.n_features_X = X.shape[1]
+        self.n_features_in_ = X.shape[1]
         # Extract the ordered array of unique labels.
-        self.classes = unique_labels(y)
+        self.classes_ = unique_labels(y)
 
         self.X_ = X
         self.y_ = y
