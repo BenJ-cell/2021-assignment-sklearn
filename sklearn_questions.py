@@ -216,13 +216,11 @@ class MonthlySplit(BaseCrossValidator):
             if fut_db[time][1] == 12:
                 next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
             else:
-                next_yearmonth_str = str(fut_db[time][0]) + '-'\ 
-                + str(fut_db[time][1] + 1)
+                next_yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
                 if fut_db[time][1] == 1:
                     last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
                 else:
-                    last_yearmonth_str = str(fut_db[time][0]) + '-'\ 
-                    + str(fut_db[time][1] - 1)
+                    last_yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
                     
         date_test = pd.date_range(start=yearmonth_str,
                                   end=next_yearmonth_str)[1:-1]
