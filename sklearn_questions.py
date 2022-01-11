@@ -213,21 +213,32 @@ class MonthlySplit(BaseCrossValidator):
         else:
             time_ind = X.index
         
-        X_tild = X.copy()
-        X_tild = X_tild.reset_index()
-        X_tild = X_tild.set_index(self.time_col)
+        n_splits = self.get_n_splits(X, y, groups)
+        splits = sorted(list(set([(time.year, time.month) for time in time_ind])))
+        fut_db = splits[1:]
         
-        n_samples = X_tild.shape[0]
-        n_splits = self.get_n_splits(X_tild, y, groups)
-        indexes = np.arange(n_samples)
-        time_date = X_tild.index.strftime("%m/%y").unique().tolist()
+        for time in range(n_splits):
+          yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
+          if fut_db[time][1] == 12:
+            next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
+          else:
+            next_yearmonth_str = str(fut_db[time][0]) + '-'\
+            + str(fut_db[time][1] + 1)
+            if fut_db[time][1] == 1:
+              last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+            else:
+              last_yearmonth_str = str(fut_db[time][0]) + '-'\
+              + str(fut_db[time][1] - 1)
+         
+        date_test = pd.date_range(start=yearmonth_str,
+                                  end=next_yearmonth_str)[1:-1]
+        date_train = pd.date_range(start=last_yearmonth_str,
+                                   end=yearmonth_str)[:-1]
         
-        for step in range(n_splits):
-          training_mask = (X_tild.index.strftime("%m/%y") == time_date[step])
-          test_mask = (X_tild.index.strftime("%m/%y") == time_date[step + 1])
-          idx_train = indexes[training_mask]
-          idx_test = indexes[test_mask]
-          
+        idx_train = np.where(time_ind.isin(date_train) == 1)
+        idx_test = np.where(time_ind.isin(date_test) == 1)
+        
         yield (
-          idx_train, idx_test
-        )
+                idx_train, idx_test
+            )
+        
