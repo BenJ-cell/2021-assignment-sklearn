@@ -84,10 +84,12 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
             The current instance of the classifier
         """
         X, y = check_X_y(X, y)
-        self._clf = KNeighborsClassifier(n_neighbors = n_neighbors, weights='uniform',
-                                         algorithm = 'auto', leaf_size = 20,
-                                         metric ='pairwise_distances',
-                                         n_jobs = n_jobs, **self.kwargs)
+        self._clf = KNeighborsClassifier(self.n_neighbors, 
+                                         self.weights,
+                                         self.algorithm, 
+                                         self.leaf_size,
+                                         self.metric,
+                                         self.n_jobs, **self.kwargs)
 
         self._clf.fit(X, y)
         return self
