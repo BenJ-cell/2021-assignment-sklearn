@@ -52,6 +52,7 @@ from sklearn.base import ClassifierMixin
 
 from sklearn.model_selection import BaseCrossValidator
 
+from sklearn import neighbors
 from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.utils.validation import check_array
 from sklearn.utils.multiclass import check_classification_targets
@@ -77,10 +78,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        knn = KNeighborsClassifier(self.n_neighbors)
-        knn.fit(X, y)
+        cl_knn = neighbors.KNeighborsClassifier(self.n_neighbors).fit(X, y)
         
-        return knn
+        return cl_knn
 
     def predict(self, X):
         """Predict function.
