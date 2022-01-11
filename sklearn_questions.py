@@ -117,7 +117,6 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
           values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
           
           predictions_y.append(values[np.argmax(counts)])
-        
         return np.array(predictions_y)
 
     def score(self, X, y):
@@ -137,7 +136,6 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         """
         prediction = self.predict(X)
         score = (prediction == y).sum() / prediction.shape[0]
-        
         return score
 
 
@@ -212,33 +210,27 @@ class MonthlySplit(BaseCrossValidator):
             time_ind = X[self.time_col]
         else:
             time_ind = X.index
-        
         n_splits = self.get_n_splits(X, y, groups)
         splits = sorted(list(set([(time.year, time.month) for time in time_ind])))
         fut_db = splits[1:]
-        
         for time in range(n_splits):
-          yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
-          if fut_db[time][1] == 12:
-            next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
-          else:
-            next_yearmonth_str = str(fut_db[time][0]) + '-'\
-            + str(fut_db[time][1] + 1)
-            if fut_db[time][1] == 1:
-              last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+            yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
+            if fut_db[time][1] == 12:
+                next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
             else:
-              last_yearmonth_str = str(fut_db[time][0]) + '-'\
-              + str(fut_db[time][1] - 1)
-         
+                next_yearmonth_str = str(fut_db[time][0]) + '-'\
+                + str(fut_db[time][1] + 1)
+                if fut_db[time][1] == 1:
+                    last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+                else:
+                    last_yearmonth_str = str(fut_db[time][0]) + '-'\
+                    + str(fut_db[time][1] - 1)
         date_test = pd.date_range(start=yearmonth_str,
                                   end=next_yearmonth_str)[1:-1]
         date_train = pd.date_range(start=last_yearmonth_str,
                                    end=yearmonth_str)[:-1]
-        
         idx_train = np.where(time_ind.isin(date_train) == 1)
         idx_test = np.where(time_ind.isin(date_test) == 1)
-        
         yield (
                 idx_train, idx_test
             )
-        
