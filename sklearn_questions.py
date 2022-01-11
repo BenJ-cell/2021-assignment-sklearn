@@ -207,28 +207,27 @@ class MonthlySplit(BaseCrossValidator):
             X = X.set_index(self.time_col)
 
         if not pd.api.types.is_datetime64_any_dtype(X.index):
-            raise ValueError('The input column is not a datetime !')
+            raise ValueError('Column entry is not datetime64 type')
         splits = []
-        zip_date = zip(X.index.month, X.index.year)
-        possibilities = {(month, year) for (month, year) in zip_date}
-        possibilities = set(possibilities)
-        for possibility in possibilities:
-            (month, year) = possibility
+        date_zip = zip(X.index.month, X.index.year)
+        dates = set({(month, year) for (month, year) in date_zip})
+        for date in dates:
+            (month, year) = date
             if month == 12:
-                if (1, year + 1) in possibilities:
+                if (1, year + 1) in dates:
                     splits.append([(month, year), (1, year+1)])
             else:
-                if (month + 1, year) in possibilities:
+                if (month + 1, year) in dates:
                     splits.append([(month, year), (month+1, year)])
         splits = np.array([[a, b, c, d] for [(a, b), (c, d)] in splits])
         splits = splits[np.lexsort((splits[:, 1], splits[:, 0]))]
         for split in splits:
-            month1, year1 = split[0], split[1]
-            month2, year2 = split[2], split[3]
-            mask1 = (X.index.month == month1) & (X.index.year == year1)
-            mask2 = (X.index.month == month2) & (X.index.year == year2)
-            idx_test = np.argwhere(mask1).flatten()
-            idx_train = np.argwhere(mask2).flatten()
+            first_month, first_year = split[0], split[1]
+            second_month, second_year = split[2], split[3]
+            test_mask = (X.index.month == first_month) & (X.index.year == first_year)
+            train_mask = (X.index.month == second_month) & (X.index.year == second_year)
+            idx_test = np.argwhere(test_mask).flatten()
+            idx_train = np.argwhere(train_mask).flatten()
             yield (
                 idx_test, idx_train
                   )
