@@ -42,7 +42,7 @@ Hints
 
 from sklearn.metrics.pairwise import pairwise_distances
 
-to compute distances between 2 sets of samples.test
+to compute distances between 2 sets of samples.
 """
 import numpy as np
 import pandas as pd
@@ -61,24 +61,34 @@ from sklearn.metrics.pairwise import pairwise_distances
 class KNearestNeighbors(BaseEstimator, ClassifierMixin):
     """KNearestNeighbors classifier."""
 
-    def __init__(self, n_neighbors=1):  # noqa: D107
+    def __init__(self, n_neighbors=1, weights='uniform', algorithm ='auto', leaf_size=20, metric = 'pairwise_distances', n_jobs=1, **kwargs):  # noqa: D107
         self.n_neighbors = n_neighbors
+        self.weights = weights
+        self.algorithm = algorithm
+        self.leaf_size = leaf_size
+        self.n_jobs = n_jobs
+        self.kwargs = kwargs
 
     def fit(self, X, y):
         """Fitting function.
-
          Parameters
         ----------
         X : ndarray, shape (n_samples, n_features)
             training data.
         y : ndarray, shape (n_samples,)
             target values.
-
         Returns
         ----------
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
+        X, y = check_X_y(X, y)
+        self._clf = KNeighborsClassifier(n_neighbors = n_neighbors, weights='uniform',
+                                         algorithm = 'auto', leaf_size = 20,
+                                         metric ='pairwise_distances',
+                                         n_jobs = n_jobs, **self.kwargs)
+
+        self._clf.fit(X, y)
         return self
 
     def predict(self, X):
