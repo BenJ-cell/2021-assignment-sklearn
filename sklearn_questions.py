@@ -111,13 +111,14 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         distances_matrix = pairwise_distances(X, self.X_)
         predictions_y = []
         for step, row in enumerate(distances_matrix):
-            idx_nghb = np.argsort(row)[:self.n_neighbors]
-            values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
-            predictions_y = np.array(predictions_y)
-            predictions_y.append(values[np.argmax(counts)]
+          idx_nghb = np.argsort(row)[:self.n_neighbors]
+          values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
+          predictions_y.append(values[np.argmax(counts)]
+          predictions_y = np.array(prediction)
+                               
         return predictions_y
-      
-    def score(self, X, y):
+    
+    def score(self, X, y):return predictions_y
         """Calculate the score of the prediction.
 
         Parameters
