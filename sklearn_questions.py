@@ -208,40 +208,37 @@ class MonthlySplit(BaseCrossValidator):
         idx_test : ndarray
             The testing set indices for that split.
         """
-        n_splits = self.get_n_splits(X, y, groups)
         if self.time_col != 'index':
-            time = X[self.time_col]
-            time_step = X[self.time_col].dt
+            time_ind = X[self.time_col]
         else:
-            time = X.index
-            time_step = X.index
+            time_ind = X.index
 
-        month_1 = time.min().month - 1
-        year_1 = time.min().year
-
-        for i in range(n_splits):
-            month_train = (month_1 + i) % 12 + 1
-            month_test = (year_1 + i + 1) % 12 + 1
-
-            year_train = year_1 + (month_1 + i) // 12
-            year_test = year_1 + (month_1 + i + 1) // 12
-
-            idx_train = pd.Series(time)[
-                (time_step.year == year_train) & (time_step.month == month_train)
-            ].index.values
-            idx_test = pd.Series(time)[
-                (time_step.year == year_test) & (time_step.month == month_test)
-            ].index.values
-            
-            yield (
-                idx_train, idx_test
-            )
-
-        n_samples = X.shape[0]
         n_splits = self.get_n_splits(X, y, groups)
-        for i in range(n_splits):
-            idx_train = range(n_samples)
-            idx_test = range(n_samples)
-            yield (
+        splits = sorted(list(set([(time.year, time.month) for time in time_ind])))
+        fut_db = splits[1:]
+
+        for time in range(n_splits):
+          yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
+          if fut_db[time][1] == 12:
+            next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
+          else:
+            next_yearmonth_str = str(fut_db[i][0]) + '-'\
+            + str(fut_db[time][1] + 1)
+            if fut_db[time][1] == 1:
+              year_last_month_str = str(fut_db[time][0]-1) + '-12'
+            else:
+              year_last_month_str = str(fut_db[time][0]) + '-'\
+              + str(fut_db[time][1] - 1)
+            
+        train_date_range = pd.date_range(start=year_last_month_str,
+                                         end=yearmonth_str)[:-1]
+        test_date_range = pd.date_range(start=yearmonth_str,
+                                        end=next_yearmonth_str)[1:-1]
+        
+        idx_train = np.where(index.isin(train_date_range) == 1)
+        dx_test = np.where(index.isin(test_date_range) == 1)
+        
+        yield (
                 idx_train, idx_test
             )
+        
