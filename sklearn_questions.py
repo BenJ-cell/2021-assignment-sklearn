@@ -219,13 +219,17 @@ class MonthlySplit(BaseCrossValidator):
             else:
                 if (month + 1, year) in dates:
                     splits.append([(month, year), (month+1, year)])
-        splits = np.array([[a, b, c, d] for [(a, b), (c, d)] in splits])
+        splits = np.array([[i, j, k, q] for [(i, j), (k, q)] in splits])
         splits = splits[np.lexsort((splits[:, 1], splits[:, 0]))]
         for split in splits:
             first_month, first_year = split[0], split[1]
             second_month, second_year = split[2], split[3]
-            test_mask = (X.index.month == first_month) & (X.index.year == first_year)
-            train_mask = (X.index.month == second_month) & (X.index.year == second_year)
+            mask_tm1 = (X.index.month == first_month)
+            mask_ty1 = (X.index.year == first_year)
+            mask_tm2 = (X.index.month == second_month)
+            mask_ty2 = (X.index.year == first_year)
+            test_mask = (mask_tm1) & (mask_ty1)
+            train_mask = (mask_tm2) & (mask_ty2)
             idx_test = np.argwhere(test_mask).flatten()
             idx_train = np.argwhere(train_mask).flatten()
             yield (
