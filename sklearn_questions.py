@@ -214,7 +214,7 @@ class MonthlySplit(BaseCrossValidator):
         for date in dates:
             (month, year) = date
             if month == 12:
-                if (1, year + 1) in dates:
+                if (1, 1 + year) in dates:
                     splits.append([(month, year), (1, year+1)])
             else:
                 if (month + 1, year) in dates:
