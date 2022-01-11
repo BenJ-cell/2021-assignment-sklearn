@@ -113,7 +113,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         score : float
             Accuracy of the model computed for the (X, y) pairs.
         """
-        return 0.
+        return np.sum(self.predict(X) == y) / X.shape[0]
 
 
 class MonthlySplit(BaseCrossValidator):
