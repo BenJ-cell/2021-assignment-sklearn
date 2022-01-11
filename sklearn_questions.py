@@ -235,8 +235,8 @@ class MonthlySplit(BaseCrossValidator):
         date_train = pd.date_range(start=year_last_month_str,
                                    end=yearmonth_str)[:-1]
         
-        idx_train = np.where(index.isin(date_train) == 1)
-        idx_test = np.where(index.isin(date_test) == 1)
+        idx_train = np.where(time_ind.isin(date_train) == 1)
+        idx_test = np.where(time_ind.isin(date_test) == 1)
         
         yield (
                 idx_train, idx_test
