@@ -108,13 +108,10 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         check_is_fitted(self)
         distances_matrix = pairwise_distances(X, self.X_)
         predictions_y = []
-
         for step, row in enumerate(distances_matrix):
-          idx_nghb = np.argsort(row)[:self.n_neighbors]
-          
-          values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
-          
-          predictions_y.append(values[np.argmax(counts)])
+            idx_nghb = np.argsort(row)[:self.n_neighbors]
+            values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
+            predictions_y.append(values[np.argmax(counts)])
         return np.array(predictions_y)
 
     def score(self, X, y):
@@ -209,19 +206,21 @@ class MonthlySplit(BaseCrossValidator):
         else:
             time_ind = X.index
         n_splits = self.get_n_splits(X, y, groups)
-        splits = sorted(list(set([(time.year, time.month) for time in time_ind])))
+        splits = sorted(list(set([(time.year,
+                                   time.month) for time in time_ind])))
         fut_db = splits[1:]
         for time in range(n_splits):
             yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
             if fut_db[time][1] == 12:
                 next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
             else:
-                next_yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
-                if fut_db[time][1] == 1:
-                    last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
-                else:
-                    last_yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
-                    
+              b = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
+              next_yearmonth_str = b
+              if fut_db[time][1] == 1:
+                last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+              else:
+                a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
+                last_yearmonth_str = a
         date_test = pd.date_range(start=yearmonth_str,
                                   end=next_yearmonth_str)[1:-1]
         date_train = pd.date_range(start=last_yearmonth_str,
