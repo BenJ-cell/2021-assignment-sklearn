@@ -215,10 +215,10 @@ class MonthlySplit(BaseCrossValidator):
             (month, year) = date
             if month == 12:
                 if (1, 1 + year) in dates:
-                    splits.append([(month, year), (1, year+1)])
+                    splits.append([(month, year), (1, 1 + year)])
             else:
-                if (month + 1, year) in dates:
-                    splits.append([(month, year), (month+1, year)])
+                if (1 + month, year) in dates:
+                    splits.append([(month, year), (1 + month, year)])
         splits = np.array([[i, j, k, q] for [(i, j), (k, q)] in splits])
         splits = splits[np.lexsort((splits[:, 1], splits[:, 0]))]
         for split in splits:
