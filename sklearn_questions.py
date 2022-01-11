@@ -86,7 +86,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         # Number of features
         self.n_features_X = X.shape[1]
         # Extract the ordered array of unique labels.
-        self.labels = unique_labels(y)
+        self.classes = unique_labels(y)
 
         self.X_ = X
         self.y_ = y
