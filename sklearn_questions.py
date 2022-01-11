@@ -77,9 +77,13 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        _clf = KNeighborsClassifier(n_neighbors = self.n_neighbors)
-        _clf.fit(X, y)
-        return _clf
+        try:
+          knn = KNeighborsClassifier(n_neighbors = self.n_neighbors)
+          knn.fit(X, y)
+          except ValueError:
+            raise ValueError("ValueError exception thrown")
+            
+          return knn
 
     def predict(self, X):
         """Predict function.
@@ -94,9 +98,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         y : ndarray, shape (n_test_samples,)
             Class labels for each test data sample.
         """
-        check_is_fitted(self, '_clf')
+        check_is_fitted(self, 'knn')
         X = check_array(X)
-        return self._clf.predict(X)
+        return self.knn.predict(X)
 
     def score(self, X, y):
         """Calculate the score of the prediction.
