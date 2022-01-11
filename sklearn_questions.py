@@ -182,9 +182,9 @@ class MonthlySplit(BaseCrossValidator):
             time_ind = X[self.time_col]
         else:
             time_ind = X.index
-        if not any([np.dtype(index) == np.dtype('datetime64[ns]'),
-                    np.dtype(index) == np.dtype('datetime64')]):
-            raise ValueError('Column type {self.time_col} must be datetime64')
+        if not any([np.dtype(time_ind) == np.dtype('datetime64[ns]'),
+                    np.dtype(time_ind) == np.dtype('datetime64')]):
+            raise ValueError('Column type must be datetime64')
 
         return len(set([(time.year, time.month) for time in time_ind])) - 1
 
