@@ -135,6 +135,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         """
         prediction = self.predict(X)
         score = (prediction == y).sum() / prediction.shape[0]
+        
         return score
 
 
@@ -175,7 +176,17 @@ class MonthlySplit(BaseCrossValidator):
         n_splits : int
             The number of splits.
         """
-        return (int((X.max() - X.min()) / np.timedelta64(1, 'M')) // 2) * 2
+        if self.time_col == 'index':
+            time = X.index
+        else:
+            time = X[self.time_col]
+        if time.dtype != 'datetime64[ns]':
+            raise ValueError("Not of datetime64 type")
+
+        n_splits_month = 12 * (time.max().year - time.min().year) \
+            + (time.max().month - time.min().month)
+        
+        return n_splits_month
 
     def split(self, X, y, groups=None):
         """Generate indices to split data into training and test set.
