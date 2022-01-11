@@ -66,6 +66,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self.weights = weights
         self.algorithm = algorithm
         self.leaf_size = leaf_size
+        self.metric = metric
         self.n_jobs = n_jobs
         self.kwargs = kwargs
 
