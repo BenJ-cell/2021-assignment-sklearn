@@ -204,31 +204,31 @@ class MonthlySplit(BaseCrossValidator):
             The testing set indices for that split.
         """
         if self.time_col != 'index':
-            time_ind = X[self.time_col]
-        else:
-            time_ind = X.index
-        n_splits = self.get_n_splits(X, y, groups)
-        splits = sorted(list(set([(time.year,
-                                   time.month) for time in time_ind])))
-        fut_db = splits[1:]
-        for time in range(n_splits):
-            yearmonth_str = str(fut_db[time][0]) + '-' + str(fut_db[time][1])
-            if fut_db[time][1] == 12:
-                next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
+            X = X.set_index(self.time_col)
+
+        if not pd.api.types.is_datetime64_any_dtype(X.index):
+            raise ValueError('The input column is not a datetime !')
+        splits = []
+        zip_date = zip(X.index.month, X.index.year)
+        possibilities = {(month, year) for (month, year) in zip_date}
+        possibilities = set(possibilities)
+        for possibility in possibilities:
+            (month, year) = possibility
+            if month == 12:
+                if (1, year + 1) in possibilities:
+                    splits.append([(month, year), (1, year+1)])
             else:
-                b = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
-                next_yearmonth_str = b
-                if fut_db[time][1] == 1:
-                    last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
-                else:
-                    a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
-                    last_yearmonth_str = a
-        date_test = pd.date_range(start=yearmonth_str,
-                                  end=next_yearmonth_str)[1:-1]
-        date_train = pd.date_range(start=last_yearmonth_str,
-                                   end=yearmonth_str)[:-1]
-        idx_train = np.where(time_ind.isin(date_train) == 1)
-        idx_test = np.where(time_ind.isin(date_test) == 1)
-        yield (
-                idx_train, idx_test
-            )
+                if (month + 1, year) in possibilities:
+                    splits.append([(month, year), (month+1, year)])
+        splits = np.array([[a, b, c, d] for [(a, b), (c, d)] in splits])
+        splits = splits[np.lexsort((splits[:, 1], splits[:, 0]))]
+        for split in splits:
+            month1, year1 = split[0], split[1]
+            month2, year2 = split[2], split[3]
+            mask1 = (X.index.month == month1) & (X.index.year == year1)
+            mask2 = (X.index.month == month2) & (X.index.year == year2)
+            idx_test = np.argwhere(mask1).flatten()
+            idx_train = np.argwhere(mask2).flatten()
+            yield (
+                idx_test, idx_train
+                  )
