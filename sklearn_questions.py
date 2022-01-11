@@ -81,9 +81,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
           knn = KNeighborsClassifier(n_neighbors = self.n_neighbors)
           knn.fit(X, y)
           except ValueError:
-             raise ValueError("ValueError exception thrown")
-            
-          return knn
+            raise ValueError("ValueError exception thrown")
+
+        return knn
 
     def predict(self, X):
         """Predict function.
