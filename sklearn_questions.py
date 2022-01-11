@@ -222,7 +222,7 @@ class MonthlySplit(BaseCrossValidator):
           if fut_db[time][1] == 12:
             next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
           else:
-            next_yearmonth_str = str(fut_db[i][0]) + '-'\
+            next_yearmonth_str = str(fut_db[time][0]) + '-'\
             + str(fut_db[time][1] + 1)
             if fut_db[time][1] == 1:
               year_last_month_str = str(fut_db[time][0]-1) + '-12'
