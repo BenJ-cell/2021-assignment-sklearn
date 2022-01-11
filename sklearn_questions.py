@@ -67,6 +67,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y):
         """Fitting function.
+        
          Parameters
         ----------
         X : ndarray, shape (n_samples, n_features)
