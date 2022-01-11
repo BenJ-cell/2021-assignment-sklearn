@@ -106,18 +106,16 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         y : ndarray, shape (n_test_samples,)
             Class labels for each test data sample.
         """
-        predictions = []  # placeholder for N labels
-
-        # loop over all test samples
-        for X_Test in X:
-          # Numpy array of distances between current test and all training samples
-          distances = np.sum(pairwise_distances(self.X - X_Test), axis=1)
-          # Compute the closest point
-          index_min = np.argmin(distances)
-          # Finally adding the corresponding labels
-          predictions.append(self.y[index_min])
-          
-          return predictions
+        X = check_array(X)
+        check_is_fitted(self)
+        distances_matrix = pairwise_distances(X, self.X_)
+        predictions_y = []
+        for step, row in enumerate(distances_matrix):
+            idx_nghb = np.argsort(row)[:self.n_neighbors]
+            values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
+            predictions_y = np.array(predictions_y)
+            predictions_y.append(values[np.argmax(counts)]
+        return predictions_y
 
     def score(self, X, y):
         """Calculate the score of the prediction.
