@@ -229,14 +229,14 @@ class MonthlySplit(BaseCrossValidator):
             else:
               year_last_month_str = str(fut_db[time][0]) + '-'\
               + str(fut_db[time][1] - 1)
-            
-        train_date_range = pd.date_range(start=year_last_month_str,
-                                         end=yearmonth_str)[:-1]
-        test_date_range = pd.date_range(start=yearmonth_str,
-                                        end=next_yearmonth_str)[1:-1]
+         
+        date_test = pd.date_range(start=yearmonth_str,
+                                  end=next_yearmonth_str)[1:-1]
+        date_train = pd.date_range(start=year_last_month_str,
+                                   end=yearmonth_str)[:-1]
         
-        idx_train = np.where(index.isin(train_date_range) == 1)
-        dx_test = np.where(index.isin(test_date_range) == 1)
+        idx_train = np.where(index.isin(date_train) == 1)
+        idx_test = np.where(index.isin(date_test) == 1)
         
         yield (
                 idx_train, idx_test
