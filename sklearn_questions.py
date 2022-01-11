@@ -111,7 +111,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         # loop over all test samples
         for X_Test in X:
           # Numpy array of distances between current test and all training samples
-          distances = np.sum(self.distance(self.X - X_Test), axis=1)
+          distances = np.sum(pairwise_distances(self.X - X_Test), axis=1)
           # Compute the closest point
           index_min = np.argmin(distances)
           # Finally adding the corresponding labels
