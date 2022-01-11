@@ -77,7 +77,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        _clf = KNeighborsClassifier(n_neighbors)
+        _clf = KNeighborsClassifier(n_neighbors = self.n_neighbors)
         _clf.fit(X, y)
 
     def predict(self, X):
