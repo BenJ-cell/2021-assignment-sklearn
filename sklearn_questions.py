@@ -115,7 +115,6 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
             values, counts = np.unique(self.y_[idx_nghb], return_counts=True)
             predictions_y = np.array(predictions_y)
             predictions_y.append(values[np.argmax(counts)]
-        
         return predictions_y
       
     def score(self, X, y):
