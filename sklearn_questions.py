@@ -78,9 +78,19 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        cl_knn = neighbors.KNeighborsClassifier(self.n_neighbors).fit(X, y)
-        
-        return cl_knn
+        # Checks X and y for consistent length, enforces X to be 2D and y 1D.
+        X, y = check_X_y(X, y)
+        # Ensure that target y is of a non-regression type.
+        check_classification_targets(y)
+        # Number of features
+        self.n_features_X = X.shape[1]
+        # Extract the ordered array of unique labels.
+        self.labels = unique_labels(y)
+
+        self.X_ = X
+        self.y_ = y
+
+        return self
 
     def predict(self, X):
         """Predict function.
@@ -95,9 +105,18 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         y : ndarray, shape (n_test_samples,)
             Class labels for each test data sample.
         """
-        check_is_fitted(self, 'knn')
-        X = check_array(X)
-        return self.knn.predict(X)
+        predictions = []  # placeholder for N labels
+
+        # loop over all test samples
+        for X_Test in X:
+          # Numpy array of distances between current test and all training samples
+          distances = np.sum(self.distance(self.X - X_Test), axis=1)
+          # Compute the closest point
+          index_min = np.argmin(distances)
+          # Finally adding the corresponding labels
+          predictions.append(self.y[index_min])
+          
+          return predictions
 
     def score(self, X, y):
         """Calculate the score of the prediction.
