@@ -227,7 +227,7 @@ class MonthlySplit(BaseCrossValidator):
             mask_tm1 = (X.index.month == first_month)
             mask_ty1 = (X.index.year == first_year)
             mask_tm2 = (X.index.month == second_month)
-            mask_ty2 = (X.index.year == first_year)
+            mask_ty2 = (X.index.year == second_year)
             test_mask = (mask_tm1) & (mask_ty1)
             train_mask = (mask_tm2) & (mask_ty2)
             idx_test = np.argwhere(test_mask).flatten()
