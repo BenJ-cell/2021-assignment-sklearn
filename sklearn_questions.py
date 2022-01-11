@@ -61,14 +61,8 @@ from sklearn.neighbors import KNeighborsClassifier
 class KNearestNeighbors(BaseEstimator, ClassifierMixin):
     """KNearestNeighbors classifier."""
 
-    def __init__(self, n_neighbors=1, weights='uniform', algorithm ='auto', leaf_size=20, metric = 'pairwise_distances', n_jobs=1, **kwargs):  # noqa: D107
+    def __init__(self, n_neighbors=1):  # noqa: D107
         self.n_neighbors = n_neighbors
-        self.weights = weights
-        self.algorithm = algorithm
-        self.leaf_size = leaf_size
-        self.metric = metric
-        self.n_jobs = n_jobs
-        self.kwargs = kwargs
 
     def fit(self, X, y):
         """Fitting function.
@@ -83,16 +77,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        X, y = check_X_y(X, y)
-        self._clf = KNeighborsClassifier(self.n_neighbors, 
-                                         self.weights,
-                                         self.algorithm, 
-                                         self.leaf_size,
-                                         self.metric,
-                                         self.n_jobs, **self.kwargs)
-
-        self._clf.fit(X, y)
-        return self
+        check_is_fitted(self)
+        X = check_array(X)
+        return self.y_[pairwise_distances_argmin(X, self.X_)]
 
     def predict(self, X):
         """Predict function.
