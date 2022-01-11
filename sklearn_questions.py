@@ -117,7 +117,7 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
             predictions_y.append(values[np.argmax(counts)]
         
         return predictions_y
-
+      
     def score(self, X, y):
         """Calculate the score of the prediction.
 
