@@ -58,6 +58,7 @@ from sklearn.utils.validation import check_array
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.metrics.pairwise import pairwise_distances
 
+
 class KNearestNeighbors(BaseEstimator, ClassifierMixin):
   
     """KNearestNeighbors classifier."""
@@ -218,10 +219,10 @@ class MonthlySplit(BaseCrossValidator):
                 b = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
                 next_yearmonth_str = b
                 if fut_db[time][1] == 1:
-                  last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+                    last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
                 else:
-                  a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
-                  last_yearmonth_str = a
+                    a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
+                    last_yearmonth_str = a
         date_test = pd.date_range(start=yearmonth_str,
                                   end=next_yearmonth_str)[1:-1]
         date_train = pd.date_range(start=last_yearmonth_str,
