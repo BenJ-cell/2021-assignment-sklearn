@@ -77,12 +77,9 @@ class KNearestNeighbors(BaseEstimator, ClassifierMixin):
         self : instance of KNearestNeighbors
             The current instance of the classifier
         """
-        try:
-          knn = KNeighborsClassifier(n_neighbors = self.n_neighbors)
-          knn.fit(X, y)
-          except ValueError:
-            raise ValueError("ValueError exception thrown")
-
+        knn = KNeighborsClassifier(n_neighbors = self.n_neighbors)
+        knn.fit(X, y)
+        
         return knn
 
     def predict(self, X):
