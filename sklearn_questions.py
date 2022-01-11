@@ -59,6 +59,7 @@ from sklearn.utils.multiclass import check_classification_targets
 from sklearn.metrics.pairwise import pairwise_distances
 
 class KNearestNeighbors(BaseEstimator, ClassifierMixin):
+  
     """KNearestNeighbors classifier."""
 
     def __init__(self, n_neighbors=1):  # noqa: D107
@@ -214,13 +215,13 @@ class MonthlySplit(BaseCrossValidator):
             if fut_db[time][1] == 12:
                 next_yearmonth_str = str(fut_db[time][0] + 1) + '-1'
             else:
-              b = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
-              next_yearmonth_str = b
-              if fut_db[time][1] == 1:
-                last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
-              else:
-                a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
-                last_yearmonth_str = a
+                b = str(fut_db[time][0]) + '-' + str(fut_db[time][1] + 1)
+                next_yearmonth_str = b
+                if fut_db[time][1] == 1:
+                  last_yearmonth_str = str(fut_db[time][0]-1) + '-12'
+                else:
+                  a = str(fut_db[time][0]) + '-' + str(fut_db[time][1] - 1)
+                  last_yearmonth_str = a
         date_test = pd.date_range(start=yearmonth_str,
                                   end=next_yearmonth_str)[1:-1]
         date_train = pd.date_range(start=last_yearmonth_str,
